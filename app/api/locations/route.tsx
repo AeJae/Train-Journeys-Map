@@ -5,7 +5,7 @@ export async function GET() {
     const pool = await Pool();
 
     try {
-        const [data] = await pool.query("SELECT * FROM locations WHERE is_station = true;");
+        const [data] = await pool.query("SELECT * FROM locations;");
         return NextResponse.json(data);
     } catch (error) {
         console.error("Error fetching data: ", error);
