@@ -1,23 +1,16 @@
 'use client'
 
-export function PageNav({activePage, setPage}: {activePage: string, setPage: any}) {
+import {usePathname, useRouter} from "next/navigation";
+
+export function PageNav() {
+    const router = useRouter();
+    const page = usePathname().split("/")[1];
+
     return (
         <nav className={"flex items-center justify-evenly w-full h-16 bg-slate-400 text-slate-950 text-3xl"}>
-            <NavLink
-                active={activePage === "stations"}
-                onclick={() => setPage("stations")}
-                text={"Stations"}
-            />
-            <NavLink
-                active={activePage === "map"}
-                onclick={() => {setPage("map")}}
-                text={"Map"}
-            />
-            <NavLink
-                active={activePage === "waypoints"}
-                onclick={() => setPage("waypoints")}
-                text={"Waypoints"}
-            />
+            <NavLink active={page === "stations"} onclick={() => {router.push("/stations");}} text={"Stations"} />
+            <NavLink active={page === ""} onclick={() => {router.push("/");}} text={"Map"} />
+            <NavLink active={page === "waypoints"} onclick={() => {router.push("/waypoints");}} text={"Waypoints"} />
         </nav>
     )
 }

@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import Pool from "@/app/misc/Pool";
+import Pool from "@/app/misc/db";
 
 export async function GET() {
     const pool = await Pool();
