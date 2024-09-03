@@ -1,5 +1,5 @@
 export default function Loading() {
     return (
-        <p>Fetching waypoints...</p>
+        <p>Fetching links...</p>
     )
 }
