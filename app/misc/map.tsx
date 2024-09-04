@@ -8,7 +8,7 @@ import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet"
 import {icon, LatLng} from "leaflet";
 
 export default function Map({markers, links}: {markers: any, links: any}) {
-    const london = new LatLng(51.45, -0.155);
+    const rotterdam = new LatLng(51.92492887890045, 4.468036742571581)
 
     const stnIcon = icon({
         iconUrl: "stn.png",
@@ -22,13 +22,13 @@ export default function Map({markers, links}: {markers: any, links: any}) {
         const m = markers[i];
         markerList.push(
             <Marker key={"m"+i} position={new LatLng(parseFloat(m.lat), parseFloat(m.long))} icon={stnIcon}>
-                <Popup>{m.name}</Popup>
+                <Popup className={"font-bold"}>{m.name}</Popup>
             </Marker>
         )
     }
 
     return (
-        <MapContainer className={"h-[calc(100dvh-4rem)]"} center={london} zoom={6}>
+        <MapContainer className={"h-[calc(100dvh-4rem)]"} center={rotterdam} zoom={5}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
