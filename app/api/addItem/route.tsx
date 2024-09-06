@@ -1,14 +1,6 @@
+import {BaseItem, LinkOverAPI} from "@/app/misc/interfaces";
 import {NextResponse} from "next/server";
 import Pool from "@/app/misc/db";
-
-export interface BaseItem {
-    type: string
-}
-
-export interface LinkToAdd extends BaseItem {
-    a: string,
-    b: string
-}
 
 // Error JSON creator for link insertions.
 function linkErrorJSON(e: any) {
@@ -18,6 +10,8 @@ function linkErrorJSON(e: any) {
         return {msg: "This link already exists."};
     } else if (e.code === "ER_CON_COUNT_ERROR") {
         return {msg: "Database offline due to overloading."};
+    } else if (e.code === "ECONNREFUSED") {
+        return {msg: "Database unavailable."};
     } else {
         console.log(e);
         return {msg: "An unknown error occurred."};
@@ -31,7 +25,7 @@ export async function POST(req: Request) {
     const data: BaseItem = await req.json();
 
     if (data.type === "link") {
-        const link = data as LinkToAdd;
+        const link = data as LinkOverAPI;
 
         // Check if location A and B are the same
         if (link.a === link.b) {
@@ -54,4 +48,5 @@ export async function POST(req: Request) {
             return NextResponse.json(linkErrorJSON(error));
         }
     }
+    return NextResponse.json({msg: "Unknown data type."})
 }

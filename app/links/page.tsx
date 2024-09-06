@@ -1,6 +1,6 @@
 import Link from "@/app/links/link";
 import NewLink from "@/app/links/newLink";
-import {LinkToAdd} from "@/app/api/addItem/route";
+import {LinkOverAPI} from "@/app/misc/interfaces";
 
 export default async function Page() {
     const rawLinks = await fetch("http://localhost:3000/api/links", {cache: "no-cache"});
@@ -9,14 +9,15 @@ export default async function Page() {
     // Delete link from database
     async function deleteLink(link: any) {
         'use server'
-        console.log("Delete:", link.location_a, "<->", link.location_b);
-        // Actually delete it...
+        const data: LinkOverAPI = {type: "link", a: link.location_a, b: link.location_b};
+        const received = await fetch("http://localhost:3000/api/deleteItem", {method: "POST", cache: "no-cache", body: JSON.stringify(data)});
+        return await received.json();
     }
 
     // Add link to database and return result
     async function addLink(locationA: string, locationB: string) {
         'use server'
-        const data: LinkToAdd = {type: "link", a: locationA, b: locationB};
+        const data: LinkOverAPI = {type: "link", a: locationA, b: locationB};
         const received = await fetch("http://localhost:3000/api/addItem", {method: "POST", cache: "no-cache", body: JSON.stringify(data)});
         return await received.json();
     }

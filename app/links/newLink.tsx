@@ -46,6 +46,10 @@ export default function NewLink({addLink}: {addLink: Function}) {
                 setSuccess(true);
                 setShowResult(true);
                 router.refresh();
+                setTimeout(() => {
+                    setShowResult(false);
+                    setSuccess(false);
+                }, 2500)
             } else {
                 setMsg(result.msg);
                 setSuccess(false);
