@@ -8,9 +8,9 @@ export function PageNav() {
 
     return (
         <nav className={"flex items-center justify-evenly w-full h-16 bg-slate-400 text-slate-950 text-3xl"}>
-            <NavLink active={page === "stations"} onclick={() => {router.push("/stations");}} text={"Stations"} />
-            <NavLink active={page === ""} onclick={() => {router.push("/");}} text={"Map"} />
-            <NavLink active={page === "links"} onclick={() => {router.push("/links");}} text={"Links"} />
+            <NavLink active={page === "stations"} onclick={() => {router.push("/stations");router.refresh()}} text={"Stations"} />
+            <NavLink active={page === ""} onclick={() => {router.push("/");router.refresh()}} text={"Map"} />
+            <NavLink active={page === "links"} onclick={() => {router.push("/links");router.refresh()}} text={"Links"} />
         </nav>
     )
 }

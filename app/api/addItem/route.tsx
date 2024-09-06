@@ -32,7 +32,11 @@ export async function POST(req: Request) {
 
     if (data.type === "link") {
         const link = data as LinkToAdd;
-        console.log(`Link: ${link.a} <-> ${link.b}.`);
+
+        // Check if location A and B are the same
+        if (link.a === link.b) {
+            return NextResponse.json({msg: "Location A and B cannot be the same."})
+        }
 
         // INSERT INTO TABLE
         try {

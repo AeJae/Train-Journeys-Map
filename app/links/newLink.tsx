@@ -1,11 +1,22 @@
 'use client'
 
 import {useState} from "react";
+import {useRouter} from "next/navigation";
 
 export default function NewLink({addLink}: {addLink: Function}) {
-    const [showCreate, setShowCreate] = useState(false)
+    const router = useRouter();
+    const [showCreateArea, setShowCreateArea] = useState(false);
+    const [showResult, setShowResult] = useState(false);
+    const [success, setSuccess] = useState(false);
     const [locAText, setLocAText] = useState("");
     const [locBText, setLocBText] = useState("");
+    const [msg, setMsg] = useState("");
+
+    function createClicked() {
+        setShowResult(false);
+        setSuccess(false);
+        setShowCreateArea(true);
+    }
 
     function loc_a_handler(e: any) {
         setLocAText(e.target.value);
@@ -17,7 +28,7 @@ export default function NewLink({addLink}: {addLink: Function}) {
 
     function handleCancel(e: any) {
         e.preventDefault();
-        setShowCreate(false);
+        setShowCreateArea(false);
     }
 
     function handleSubmit(e: any) {
@@ -25,15 +36,29 @@ export default function NewLink({addLink}: {addLink: Function}) {
         // Convert to title case...
         const locA = locAText.split(' ').map(w => w[0].toUpperCase() + w.substring(1).toLowerCase()).join(' ');
         const locB = locBText.split(' ').map(w => w[0].toUpperCase() + w.substring(1).toLowerCase()).join(' ');
-        // Process on server...
-        addLink(locA, locB);
+        // Process on server, then...
+        addLink(locA, locB).then((result: any) => {
+            if (result.success) {
+                setLocAText("");
+                setLocBText("");
+                setShowCreateArea(false);
+                setMsg("Success.")
+                setSuccess(true);
+                setShowResult(true);
+                router.refresh();
+            } else {
+                setMsg(result.msg);
+                setSuccess(false);
+                setShowResult(true);
+            }
+        });
     }
 
     return (
         <>
         {/* Normal tab shown with no interaction */}
-        {!showCreate &&
-            <button onClick={() => {setShowCreate(true)}} className={"flex items-center justify-between p-2 " +
+        {!showCreateArea &&
+            <button onClick={createClicked} className={"flex items-center justify-between p-2 " +
                 "bg-slate-300 w-full mb-2 rounded-md hover:outline hover:outline-1 hover:outline-slate-400"}>
                 <p className={"font-bold"}>Create a new link</p>
                 <div className={"flex justify-center items-center h-16 sm:h-fit"}>
@@ -43,7 +68,7 @@ export default function NewLink({addLink}: {addLink: Function}) {
         }
 
         {/* Tab shown after user has decided to add a new link */}
-        {showCreate && (
+        {showCreateArea && (
             <div className={"p-2 bg-slate-300 w-full mb-2 rounded-md hover:outline hover:outline-1 hover:outline-slate-400"}>
                 <form className={"flex justify-between items-center"}>
                     <div className={"flex flex-col sm:flex-row items-center"}>
@@ -58,6 +83,8 @@ export default function NewLink({addLink}: {addLink: Function}) {
                 </form>
             </div>
         )}
+
+        {showResult && <p className={"mb-2 " + (success?"text-green-500":"text-red-600")}>{msg}</p>}
         </>
     )
 }
