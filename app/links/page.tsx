@@ -5,7 +5,7 @@ export default async function Page() {
     let linkElems = [];
     for (const i in links) {
         const lnk = links[i];
-        linkElems.push(<p key={i}>{lnk.location_a}, {lnk.location_b}</p>)
+        linkElems.push(<p key={i}>{lnk.location_a} {"<-->"} {lnk.location_b}</p>)
     }
 
     return (
