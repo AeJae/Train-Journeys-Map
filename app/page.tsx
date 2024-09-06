@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import {Suspense, useMemo} from "react";
 import dynamic from "next/dynamic";
 
 export default async function Home() {
@@ -14,7 +14,9 @@ export default async function Home() {
 
     return (
         <div>
-            <Map markers={markersJson} links={linksJson}/>
+            <Suspense fallback={<p>Preparing map...</p>}>
+                <Map markers={markersJson} links={linksJson}/>
+            </Suspense>
         </div>
     )
 }
