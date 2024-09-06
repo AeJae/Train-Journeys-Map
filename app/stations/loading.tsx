@@ -1,5 +1,7 @@
+import {TriangleLoader} from "@/app/misc/loading";
+
 export default function Loading() {
     return (
-        <p>Fetching stations and waypoints...</p>
+        <TriangleLoader text={"Fetching stations and waypoints..."} />
     )
 }

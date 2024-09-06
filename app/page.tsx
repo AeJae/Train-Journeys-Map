@@ -1,9 +1,10 @@
-import {Suspense, useMemo} from "react";
+import {useMemo} from "react";
 import dynamic from "next/dynamic";
+import {TriangleLoader} from "@/app/misc/loading";
 
 export default async function Home() {
     const Map = useMemo(() => dynamic(() => import('@/app/misc/map'), {
-        loading: () => <p>Loading map...</p>,
+        loading: () => <TriangleLoader text={"Preparing map..."} />,
         ssr: false
     }), [])
 
@@ -14,9 +15,7 @@ export default async function Home() {
 
     return (
         <div>
-            <Suspense fallback={<p>Preparing map...</p>}>
-                <Map markers={markersJson} links={linksJson}/>
-            </Suspense>
+            <Map markers={markersJson} links={linksJson}/>
         </div>
     )
 }
