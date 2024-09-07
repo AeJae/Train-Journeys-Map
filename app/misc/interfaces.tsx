@@ -8,3 +8,11 @@ export interface LinkOverAPI extends BaseItem {
     a: string,   // Location A (e.g. "London Victoria")
     b: string    // Location B
 }
+
+// Information related to a location retrieved from the database.
+export interface Location {
+    name: string,
+    is_station: boolean,
+    lat: number,
+    long: number
+}

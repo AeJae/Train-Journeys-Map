@@ -1,3 +1,5 @@
+import LocationElem from "@/app/stations/locationElem";
+
 export default async function Page() {
     const rawStations = await fetch("http://localhost:3000/api/stations", {cache: "no-cache"});
     const stations = await rawStations.json();
@@ -7,21 +9,22 @@ export default async function Page() {
     let stationElems = [];
     for (const i in stations) {
         const stn = stations[i];
-        stationElems.push(<p key={"s"+i}>{stn.name}</p>)
+        stationElems.push(<LocationElem key={"s"+i} loc={stn} />);
     }
 
     let waypointElems = [];
     for (const i in waypoints) {
         const wpt = waypoints[i];
-        waypointElems.push(<p key={"w"+i}>{wpt.name}</p>)
+        waypointElems.push(<LocationElem key={"w"+i} loc={wpt} />)
     }
 
     return (
         <>
-            <p className={"mt-4 font-bold"}>Stations:</p>
-            {stationElems}
-            <p className={"mt-10 font-bold"}>Waypoints:</p>
-            {waypointElems}
+            <div className={"flex flex-col items-center m-4 font-medium"}>
+                {stationElems}
+                <p className={"text-2xl font-bold mt-2 mb-4"}>Waypoints</p>
+                {waypointElems}
+            </div>
         </>
     )
 }

@@ -77,7 +77,7 @@ export default function NewLink({addLink}: {addLink: Function}) {
                 <form className={"flex justify-between items-center"}>
                     <div className={"flex flex-col sm:flex-row items-center"}>
                         <input type={"text"} placeholder={"Location A"} className={"py-1 px-2 rounded-sm outline-none"} onChange={loc_a_handler} value={locAText} />
-                        <p className={"m-0 sm:mx-1.5 h-0 sm:h-fit"}>{"<-->"}</p>
+                        <p className={"m-0 sm:mx-1.5 h-0 sm:h-fit select-none"}>{"<-->"}</p>
                         <input type={"text"} placeholder={"Location B"} className={"py-1 px-2 rounded-sm outline-none"} onChange={loc_b_handler} value={locBText} />
                     </div>
                     <div className={"flex flex-col ml-1 sm:flex-row justify-center items-center h-16 sm:h-fit"}>
