@@ -1,9 +1,9 @@
 'use client'
 
-import {Location} from "@/app/misc/interfaces";
+import {LocationElemParams} from "@/app/misc/interfaces";
 import {useState} from "react";
 
-export default function LocationElem({loc}: {loc: Location}) {
+export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, deleteFunc}: LocationElemParams) {
     const [showEditArea, setShowEditArea] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [inputLock, setInputLock] = useState(false);
@@ -25,7 +25,7 @@ export default function LocationElem({loc}: {loc: Location}) {
 
     function handleName(e: any) {
         // Only allow name changes to be made when lat and long are unchanged and no transaction is in progress.
-        if (!inputLock && loc.lat === lat && loc.long === long) setName(e.target.value);
+        if (!inputLock && String(loc.lat) === String(lat) && String(loc.long) === String(long)) setName(e.target.value);
     }
 
     function handleLat(e: any) {
@@ -39,32 +39,51 @@ export default function LocationElem({loc}: {loc: Location}) {
     }
 
     function swapType() {
-        console.log(`Swap ${loc.name} from ${loc.is_station?"station":"waypoint"} to ${loc.is_station?"waypoint":"station"}`)
+        setInputLock(true);
+        swapFunc(loc.name, !loc.is_station).then((response: any) => {
+            if (response && response.msg) console.log(response.msg);
+            setInputLock(false);
+        })
     }
 
     function removeThis() {
+        setInputLock(true);
         if (!confirmDelete) {
             setConfirmDelete(true);
+            setInputLock(false);
         } else {
-            console.log("Delete", loc.name);
-            setConfirmDelete(false);
+            deleteFunc(loc.name).then((response: any) => {
+                if (response && response.msg) console.log(response.msg);
+                setConfirmDelete(false);
+                setInputLock(false);
+            })
         }
     }
 
     function updateName() {
         setInputLock(true);
         if (loc.name !== name) {
-            console.log(`Change name of ${loc.name} to ${name}`);
+            nameFunc(loc.name, name).then((response: any) => {
+                if (response && response.msg) console.log(response.msg);
+                setInputLock(false);
+            })
+        } else {
+            setInputLock(false);
         }
-        setInputLock(false);
     }
 
     function updateLatLong() {
         setInputLock(true);
-        if (loc.lat !== lat || loc.long !== long) {
-            console.log(`Change lat and long of ${loc.name} to ${lat}, ${long}`)
+        if (String(loc.lat) !== String(lat) || String(loc.long) !== String(long)) {
+            const latFloat: number = parseFloat(String(lat)); // TS thinks lat is a number already, it's definitely not.
+            const longFloat: number = parseFloat(String(long)); // Same with long.
+            latLongFunc(loc.name, latFloat, longFloat).then((response: any) => {
+                if (response && response.msg) console.log(response.msg);
+                setInputLock(false);
+            })
+        } else {
+            setInputLock(false);
         }
-        setInputLock(false);
     }
 
     return (
@@ -114,6 +133,9 @@ export default function LocationElem({loc}: {loc: Location}) {
                             className={"w-36 ml-0.5 sm:ml-1 bg-red-600 rounded-md py-1 px-2 text-white"}>
                         {confirmDelete ? "Confirm Delete" : "Delete"}
                     </button>
+                </div>
+                <div className={"flex w-full justify-center items-center"}>
+                    <p className={"text-center w-64 sm:w-auto text-[11px] text-slate-400"}>To ensure consistency, you can only edit either Naming or Latitude & Longitude.</p>
                 </div>
             </div>}
         </div>

@@ -16,3 +16,12 @@ export interface Location {
     lat: number,
     long: number
 }
+
+// Parameters (props) for a LocationElem.
+export interface LocationElemParams {
+    loc: Location,
+    nameFunc: Function,
+    latLongFunc: Function,
+    swapFunc: Function,
+    deleteFunc: Function,
+}
