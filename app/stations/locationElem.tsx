@@ -23,9 +23,17 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         }
     }
 
+    function latsMatch() {
+        return String(lat) === String(loc.lat);
+    }
+
+    function longsMatch() {
+        return String(long) === String(loc.long);
+    }
+
     function handleName(e: any) {
         // Only allow name changes to be made when lat and long are unchanged and no transaction is in progress.
-        if (!inputLock && String(loc.lat) === String(lat) && String(loc.long) === String(long)) setName(e.target.value);
+        if (!inputLock && latsMatch() && longsMatch()) setName(e.target.value);
     }
 
     function handleLat(e: any) {
@@ -74,10 +82,8 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
 
     function updateLatLong() {
         setInputLock(true);
-        if (String(loc.lat) !== String(lat) || String(loc.long) !== String(long)) {
-            const latFloat: number = parseFloat(String(lat)); // TS thinks lat is a number already, it's definitely not.
-            const longFloat: number = parseFloat(String(long)); // Same with long.
-            latLongFunc(loc.name, latFloat, longFloat).then((response: any) => {
+        if (!latsMatch() || !longsMatch()) {
+            latLongFunc(loc.name, parseFloat(String(lat)), parseFloat(String(long))).then((response: any) => {
                 if (response && response.msg) console.log(response.msg);
                 setInputLock(false);
             })
@@ -135,7 +141,9 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
                     </button>
                 </div>
                 <div className={"flex w-full justify-center items-center"}>
-                    <p className={"text-center w-64 sm:w-auto text-[11px] text-slate-400"}>To ensure consistency, you can only edit either Naming or Latitude & Longitude.</p>
+                    <p className={"text-center w-64 sm:w-auto text-[11px] " + ((loc.name !== name || !latsMatch() || !longsMatch())?"text-red-400":"text-slate-400")}>
+                        To ensure consistency, you can only edit either Naming or Latitude & Longitude.
+                    </p>
                 </div>
             </div>}
         </div>
