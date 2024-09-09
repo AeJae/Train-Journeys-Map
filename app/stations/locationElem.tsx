@@ -5,14 +5,15 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, deleteFunc}: LocationElemParams) {
-    const [showEditArea, setShowEditArea] = useState(false);
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const [inputLock, setInputLock] = useState(false);
-    const [name, setName] = useState(loc.name);
-    const [long, setLong] = useState(loc.long);
-    const [lat, setLat] = useState(loc.lat);
+    const [showEditArea, setShowEditArea] = useState(false); // Whether the edit area should be shown.
+    const [confirmDelete, setConfirmDelete] = useState(false); // Whether the delete button should say "Confirm Delete".
+    const [inputLock, setInputLock] = useState(false); // Whether text inputs should be locked.
+    const [name, setName] = useState(loc.name); // User-entered name.
+    const [long, setLong] = useState(loc.long); // User-entered longitude.
+    const [lat, setLat] = useState(loc.lat); // User-entered latitude.
     const router = useRouter();
 
+    // Toggles the "dropdown" that enables a user to edit this location's information.
     function toggleEditArea() {
         if (showEditArea) {
             setConfirmDelete(false);
@@ -25,29 +26,35 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         }
     }
 
+    // Returns whether the stored latitude and entered latitude match for this location.
     function latsMatch() {
         return String(lat) === String(loc.lat);
     }
 
+    // Returns whether the stored longitude and entered longitude match for this location.
     function longsMatch() {
         return String(long) === String(loc.long);
     }
 
+    // Enables/disables editing of location name.
     function handleName(e: any) {
         // Only allow name changes to be made when lat and long are unchanged and no transaction is in progress.
         if (!inputLock && latsMatch() && longsMatch()) setName(e.target.value);
     }
 
+    // Enables/disables editing of latitude.
     function handleLat(e: any) {
         // Only allow lat changes to be made when name is unchanged and no transaction is in progress.
         if (!inputLock && loc.name === name) setLat(e.target.value);
     }
 
+    // Enables/disables editing of longitude.
     function handleLong(e: any) {
         // Only allow long changes to be made when name is unchanged and no transaction is in progress.
         if (!inputLock && loc.name === name) setLong(e.target.value);
     }
 
+    // Calls a server action that swaps this location's type between station and waypoint.
     function swapType() {
         setInputLock(true);
         swapFunc(loc.name, !loc.is_station).then((response: any) => {
@@ -56,6 +63,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         })
     }
 
+    // Calls a server action that removes this location from the database.
     function removeThis() {
         setInputLock(true);
         if (!confirmDelete) {
@@ -70,6 +78,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         }
     }
 
+    // Calls a server action that updates this location's name.
     function updateName() {
         setInputLock(true);
         if (loc.name !== name) {
@@ -83,6 +92,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         }
     }
 
+    // Calls a server action that updates this location's latitude and longitude.
     function updateLatLong() {
         setInputLock(true);
         if (!latsMatch() || !longsMatch()) {
