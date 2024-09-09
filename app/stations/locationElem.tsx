@@ -22,9 +22,6 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
             setLat(loc.lat);
             setLong(loc.long);
         } else {
-            setName(loc.name);
-            setLat(loc.lat);
-            setLong(loc.long);
             setShowEditArea(true);
         }
     }
@@ -63,10 +60,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         swapFunc(loc.name, !loc.is_station).then((response: any) => {
             setInputLock(false);
             if (response && response.msg) console.log(response.msg);
-            if (response && response.success) {
-                router.refresh();
-                setShowEditArea(false);
-            }
+            if (response && response.success) router.refresh();
         })
     }
 

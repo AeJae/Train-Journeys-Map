@@ -41,7 +41,7 @@ export default async function Page() {
     for (const i in stations) {
         const stn = stations[i];
         stationElems.push(<LocationElem
-            key={"s"+i}
+            key={"s"+stn.name}
             loc={stn}
             nameFunc={dbUpdateName}
             latLongFunc={dbUpdateLatLong}
@@ -54,7 +54,7 @@ export default async function Page() {
     for (const i in waypoints) {
         const wpt = waypoints[i];
         waypointElems.push(<LocationElem
-            key={"w"+i}
+            key={"w"+wpt.name}
             loc={wpt}
             nameFunc={dbUpdateName}
             latLongFunc={dbUpdateLatLong}
