@@ -109,7 +109,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
 
     return (
         <> {loc.name &&
-        <div className={"w-full p-2 mb-2 rounded-md bg-slate-300"}>
+        <div className={"w-full p-2 mb-2 rounded-md bg-slate-300 select-none"}>
             {/* Minimal Overview */}
             <button onClick={toggleEditArea} className={"flex w-full justify-between items-center"}>
                 <p className={"whitespace-nowrap overflow-hidden"+(showEditArea?" font-bold":"")}>{loc.name}</p>

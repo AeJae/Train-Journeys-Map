@@ -1,5 +1,6 @@
 import {LocationEditOverAPI} from "@/app/misc/interfaces";
 import LocationElem from "@/app/stations/locationElem";
+import NewLocation from "@/app/stations/newLocation";
 
 export default async function Page() {
     const rawStations = await fetch("http://localhost:3000/api/stations", {cache: "no-cache"});
@@ -37,6 +38,17 @@ export default async function Page() {
         // Actually update the database...
     }
 
+    async function dbCreateLocation(type: string, name: string, lat: number, long: number) {
+        'use server'
+        if (type === "stn") {
+            console.log(`ACTION: Create station - ${name} at ${lat}, ${long}`);
+        } else if (type === "wpt") {
+            console.log(`ACTION: Create waypoint - ${name} at ${lat}, ${long}`);
+        } else {
+            return ({msg: "Invalid format."})
+        }
+    }
+
     let stationElems = [];
     for (const i in stations) {
         const stn = stations[i];
@@ -66,8 +78,10 @@ export default async function Page() {
     return (
         <>
             <div className={"flex flex-col items-center m-4 font-medium"}>
+                <NewLocation station={true} createFunc={dbCreateLocation}/>
                 {stationElems}
                 <p className={"text-2xl font-bold mt-2 mb-4"}>Waypoints</p>
+                <NewLocation station={false} createFunc={dbCreateLocation}/>
                 {waypointElems}
             </div>
         </>
