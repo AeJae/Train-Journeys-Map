@@ -27,8 +27,8 @@ export default async function Page() {
 
     async function dbSwapType(name: string, newIsStation: boolean) {
         'use server'
-        console.log(`ACTION: Set isStation for ${name} to ${newIsStation}`);
-        // Actually update the database...
+        const data: LocationEditOverAPI = {editType: "isStation", name: name, newIsStation: newIsStation};
+        return await post(data);
     }
 
     async function dbDeleteLocation(name: string) {

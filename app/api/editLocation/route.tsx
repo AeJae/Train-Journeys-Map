@@ -27,7 +27,15 @@ export async function POST(req: Request) {
             console.log(error);
             return NextResponse.json({msg: "Error"});
         }
+    // Location type edits
+    } else if (data.editType === "isStation" && data.name && "newIsStation" in data) {
+        try {
+            await pool.query("UPDATE locations SET is_station = ? WHERE name = ?", [data.newIsStation, data.name]);
+            return NextResponse.json({success: true, msg: "Success."});
+        } catch (error) {
+            console.log(error);
+            return NextResponse.json({msg: "Error"});
+        }
     }
     return NextResponse.json({msg: "Service unavailable."});
-
 }

@@ -22,6 +22,9 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
             setLat(loc.lat);
             setLong(loc.long);
         } else {
+            setName(loc.name);
+            setLat(loc.lat);
+            setLong(loc.long);
             setShowEditArea(true);
         }
     }
@@ -58,8 +61,12 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
     function swapType() {
         setInputLock(true);
         swapFunc(loc.name, !loc.is_station).then((response: any) => {
-            if (response && response.msg) console.log(response.msg);
             setInputLock(false);
+            if (response && response.msg) console.log(response.msg);
+            if (response && response.success) {
+                router.refresh();
+                setShowEditArea(false);
+            }
         })
     }
 
@@ -85,7 +92,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
             nameFunc(loc.name, name).then((response: any) => {
                 setInputLock(false);
                 if (response && response.msg) console.log(response.msg);
-                if (response.success) router.refresh();
+                if (response && response.success) router.refresh();
             });
         } else {
             setInputLock(false);
@@ -99,7 +106,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
             latLongFunc(loc.name, parseFloat(String(lat)), parseFloat(String(long))).then((response: any) => {
                 setInputLock(false);
                 if (response && response.msg) console.log(response.msg);
-                if (response.success) router.refresh();
+                if (response && response.success) router.refresh();
             })
         } else {
             setInputLock(false);
