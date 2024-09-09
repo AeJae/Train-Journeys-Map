@@ -26,7 +26,7 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
     function createStation() {
         const latFloat = parseFloat(lat);
         const longFloat = parseFloat(long);
-        if (name && latFloat && longFloat) {
+        if (name && !Number.isNaN(latFloat) && !Number.isNaN(longFloat)) {
             createFunc((station?"stn":"wpt"), name, latFloat, longFloat).then((response: any) => {
                 if (response && response.msg) console.log(response.msg);
                 if (response && response.success) {
@@ -38,7 +38,7 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
                 }
             })
         } else {
-            console.log("A value is missing.");
+            console.log("You have entered an invalid value.");
         }
     }
 
@@ -70,14 +70,14 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
                     <input
                         className={"m-0 sm:mr-1 rounded-sm px-2 py-1 outline-none text-center"}
                         onChange={handleLat}
-                        placeholder={"0.0"}
+                        placeholder={"1.2"}
                         type={"text"}
                         value={lat}
                     />
                     <input
                         className={"mt-1 sm:ml-1 sm:mt-0 rounded-sm px-2 py-1 outline-none text-center"}
                         onChange={handleLong}
-                        placeholder={"0.0"}
+                        placeholder={"-1.1"}
                         type={"text"}
                         value={long}
                     />

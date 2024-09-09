@@ -1,6 +1,6 @@
 // The most basic information about any item being POSTed to an API endpoint.
 export interface BaseItem {
-    // Possible values: "link"
+    // Possible values: "link", "location"
     type: string
 }
 
@@ -10,6 +10,18 @@ export interface LinkOverAPI extends BaseItem {
     a: string,
     // Location B
     b: string
+}
+
+// Information related to a location creation being POSTed to an API endpoint.
+export interface LocationCreateOverAPI extends BaseItem{
+    // The name of the location to be created.
+    name: string,
+    // The value of is_station for the location to be created.
+    isStation: boolean,
+    // The latitude of the location to be created.
+    lat: number,
+    // The longitude of the location to be created.
+    long: number
 }
 
 // Information related to a location edit being POSTed to an API endpoint.

@@ -1,4 +1,4 @@
-import {LocationEditOverAPI} from "@/app/misc/interfaces";
+import {LocationCreateOverAPI, LocationEditOverAPI} from "@/app/misc/interfaces";
 import LocationElem from "@/app/stations/locationElem";
 import NewLocation from "@/app/stations/newLocation";
 
@@ -40,13 +40,9 @@ export default async function Page() {
 
     async function dbCreateLocation(type: string, name: string, lat: number, long: number) {
         'use server'
-        if (type === "stn") {
-            console.log(`ACTION: Create station - ${name} at ${lat}, ${long}`);
-        } else if (type === "wpt") {
-            console.log(`ACTION: Create waypoint - ${name} at ${lat}, ${long}`);
-        } else {
-            return ({msg: "Invalid format."})
-        }
+        const data: LocationCreateOverAPI = {type: "location", name: name, isStation: (type === "stn"), lat: lat, long: long};
+        const response = await fetch("http://localhost:3000/api/addItem", {method: "POST", cache: "no-cache", body: JSON.stringify(data)});
+        return await response.json();
     }
 
     let stationElems = [];
