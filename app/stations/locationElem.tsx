@@ -1,6 +1,7 @@
 'use client'
 
 import {LocationElemParams} from "@/app/misc/interfaces";
+import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, deleteFunc}: LocationElemParams) {
@@ -10,6 +11,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
     const [name, setName] = useState(loc.name);
     const [long, setLong] = useState(loc.long);
     const [lat, setLat] = useState(loc.lat);
+    const router = useRouter();
 
     function toggleEditArea() {
         if (showEditArea) {
@@ -72,9 +74,10 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         setInputLock(true);
         if (loc.name !== name) {
             nameFunc(loc.name, name).then((response: any) => {
-                if (response && response.msg) console.log(response.msg);
                 setInputLock(false);
-            })
+                if (response && response.msg) console.log(response.msg);
+                if (response.success) router.refresh();
+            });
         } else {
             setInputLock(false);
         }
@@ -84,8 +87,9 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         setInputLock(true);
         if (!latsMatch() || !longsMatch()) {
             latLongFunc(loc.name, parseFloat(String(lat)), parseFloat(String(long))).then((response: any) => {
-                if (response && response.msg) console.log(response.msg);
                 setInputLock(false);
+                if (response && response.msg) console.log(response.msg);
+                if (response.success) router.refresh();
             })
         } else {
             setInputLock(false);

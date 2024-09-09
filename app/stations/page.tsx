@@ -1,3 +1,4 @@
+import {LocationEditOverAPI} from "@/app/misc/interfaces";
 import LocationElem from "@/app/stations/locationElem";
 
 export default async function Page() {
@@ -6,16 +7,22 @@ export default async function Page() {
     const rawWaypoints = await fetch("http://localhost:3000/api/waypoints", {cache: "no-cache"});
     const waypoints = await rawWaypoints.json();
 
+    async function post(data: any) {
+        'use server'
+        const response = await fetch("http://localhost:3000/api/editLocation", {method: "POST", cache: "no-cache", body: JSON.stringify(data)});
+        return await response.json();
+    }
+
     async function dbUpdateName(originalName: string, newName: string) {
         'use server'
-        console.log(`ACTION: Change name of ${originalName} to ${newName}`);
-        // Actually update the database...
+        const data: LocationEditOverAPI = {editType: "name", name: originalName, newName: newName};
+        return await post(data);
     }
 
     async function dbUpdateLatLong(name: string, lat: number, long: number) {
         'use server'
-        console.log(`ACTION: Change lat and long of ${name} to ${lat}, ${long}`);
-        // Actually update the database...
+        const data: LocationEditOverAPI = {editType: "latLong", name: name, newLat: lat, newLong: long};
+        return await post(data);
     }
 
     async function dbSwapType(name: string, newIsStation: boolean) {

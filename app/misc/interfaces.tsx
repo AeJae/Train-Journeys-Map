@@ -16,6 +16,8 @@ export interface LinkOverAPI extends BaseItem {
 export interface LocationEditOverAPI {
     // Possible values: "name", "latLong", "isStation".
     editType: string,
+    // The (current) name of the location to be edited.
+    name: string,
     // The new name. Must be included if editType is "name".
     newName?: string,
     // The new latitude. Must be included if editType is "latLong".
