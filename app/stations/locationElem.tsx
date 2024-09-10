@@ -106,10 +106,11 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         if (loc.name !== name) {
             nameFunc(loc.name, name).then((response: any) => {
                 setInputLock(false);
-                if (response && response.msg) console.log(response.msg);
-                if (response && response.success) router.refresh();
+                handleResponse(response);
             });
         } else {
+            setErrorMsg("Please enter a new name.");
+            setShowError(true);
             setInputLock(false);
         }
     }
@@ -120,10 +121,11 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         if (!latsMatch() || !longsMatch()) {
             latLongFunc(loc.name, parseFloat(String(lat)), parseFloat(String(long))).then((response: any) => {
                 setInputLock(false);
-                if (response && response.msg) console.log(response.msg);
-                if (response && response.success) router.refresh();
+                handleResponse(response);
             })
         } else {
+            setErrorMsg("Please enter a new latitude and/or longitude.");
+            setShowError(true);
             setInputLock(false);
         }
     }

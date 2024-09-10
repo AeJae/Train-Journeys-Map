@@ -8,6 +8,8 @@ function errorJSON(e: any) {
         return {msg: "Database offline due to overloading."};
     } else if (e.code === "ECONNREFUSED") {
         return {msg: "Database unavailable."};
+    } else if (e.code === "ER_DUP_ENTRY") {
+        return {msg: "A location with this name already exists."}
     } else {
         console.log(e);
         return {msg: "An unknown error occurred."};
