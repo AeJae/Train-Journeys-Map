@@ -17,6 +17,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
 
     // Toggles the "dropdown" that enables a user to edit this location's information.
     function toggleEditArea() {
+        setShowError(false);
         if (showEditArea) {
             setConfirmDelete(false);
             setShowEditArea(false);
@@ -41,24 +42,28 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
     // Enables/disables editing of location name.
     function handleName(e: any) {
         // Only allow name changes to be made when lat and long are unchanged and no transaction is in progress.
+        setShowError(false);
         if (!inputLock && latsMatch() && longsMatch()) setName(e.target.value);
     }
 
     // Enables/disables editing of latitude.
     function handleLat(e: any) {
         // Only allow lat changes to be made when name is unchanged and no transaction is in progress.
+        setShowError(false);
         if (!inputLock && loc.name === name) setLat(e.target.value);
     }
 
     // Enables/disables editing of longitude.
     function handleLong(e: any) {
         // Only allow long changes to be made when name is unchanged and no transaction is in progress.
+        setShowError(false);
         if (!inputLock && loc.name === name) setLong(e.target.value);
     }
 
     // Calls a server action that swaps this location's type between station and waypoint.
     function swapType() {
         setInputLock(true);
+        setShowError(false);
         swapFunc(loc.name, !loc.is_station).then((response: any) => {
             setInputLock(false);
             if (response && response.msg) console.log(response.msg);
@@ -69,17 +74,23 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
     // Calls a server action that removes this location from the database.
     function removeThis() {
         setInputLock(true);
+        setShowError(false);
         if (!confirmDelete) {
             setConfirmDelete(true);
             setInputLock(false);
         } else {
             deleteFunc(loc.name).then((response: any) => {
-                if (response && response.msg) console.log(response.msg);
-                if (response && response.success) {
-                    setConfirmDelete(false);
-                    router.refresh();
-                }
                 setInputLock(false);
+                setConfirmDelete(false);
+                if (response && response.msg && !response.success) {
+                    setErrorMsg(response.msg);
+                    setShowError(true);
+                } else if (response && response.success) {
+                    router.refresh();
+                } else {
+                    setErrorMsg("No response from server.");
+                    setShowError(true);
+                }
             })
         }
     }
@@ -165,6 +176,9 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
                         To ensure consistency, you can only edit either Naming or Latitude & Longitude.
                     </p>
                 </div>
+                {showError && <div className={"w-full text-center mt-1 p-1 rounded-md bg-red-600 text-white"}>
+                    <p>{errorMsg}</p>
+                </div>}
             </div>}
         </div>
         }</>
