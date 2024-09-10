@@ -2,6 +2,18 @@ import {LocationEditOverAPI} from "@/app/misc/interfaces";
 import {NextResponse} from "next/server";
 import Pool from "@/app/misc/db";
 
+// Error JSON creator for location edits.
+function errorJSON(e: any) {
+    if (e.code === "ER_CON_COUNT_ERROR") {
+        return {msg: "Database offline due to overloading."};
+    } else if (e.code === "ECONNREFUSED") {
+        return {msg: "Database unavailable."};
+    } else {
+        console.log(e);
+        return {msg: "An unknown error occurred."};
+    }
+}
+
 // RETURN FORMAT: {success: boolean, msg: string}.
 export async function POST(req: Request) {
     const pool = await Pool();
@@ -15,7 +27,7 @@ export async function POST(req: Request) {
             return NextResponse.json({success: true, msg: "Success."});
         } catch (error) {
             console.log(error);
-            return NextResponse.json({msg: "Error."});
+            return NextResponse.json(errorJSON(error));
         }
     // Latitude and longitude edits
     } else if (data.editType === "latLong" && data.name && "newLat" in data && "newLong" in data) {
@@ -24,7 +36,7 @@ export async function POST(req: Request) {
             return NextResponse.json({success: true, msg: "Success."});
         } catch (error) {
             console.log(error);
-            return NextResponse.json({msg: "Error"});
+            return NextResponse.json(errorJSON(error));
         }
     // Location type edits
     } else if (data.editType === "isStation" && data.name && "newIsStation" in data) {
@@ -33,7 +45,7 @@ export async function POST(req: Request) {
             return NextResponse.json({success: true, msg: "Success."});
         } catch (error) {
             console.log(error);
-            return NextResponse.json({msg: "Error"});
+            return NextResponse.json(errorJSON(error));
         }
     } else {
         return NextResponse.json({msg: "Malformed request."});

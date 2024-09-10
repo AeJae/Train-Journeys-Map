@@ -60,14 +60,27 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         if (!inputLock && loc.name === name) setLong(e.target.value);
     }
 
+    // Decides how to update the page based on the response from the server.
+    function handleResponse(response: any) {
+        if (response && response.msg && !response.success) {
+            setErrorMsg(response.msg);
+            setShowError(true);
+        } else if (response && response.success) {
+            setShowError(false);
+            router.refresh();
+        } else {
+            setErrorMsg("No response from server.");
+            setShowError(true);
+        }
+    }
+
     // Calls a server action that swaps this location's type between station and waypoint.
     function swapType() {
         setInputLock(true);
         setShowError(false);
         swapFunc(loc.name, !loc.is_station).then((response: any) => {
             setInputLock(false);
-            if (response && response.msg) console.log(response.msg);
-            if (response && response.success) router.refresh();
+            handleResponse(response);
         })
     }
 
@@ -82,15 +95,7 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
             deleteFunc(loc.name).then((response: any) => {
                 setInputLock(false);
                 setConfirmDelete(false);
-                if (response && response.msg && !response.success) {
-                    setErrorMsg(response.msg);
-                    setShowError(true);
-                } else if (response && response.success) {
-                    router.refresh();
-                } else {
-                    setErrorMsg("No response from server.");
-                    setShowError(true);
-                }
+                handleResponse(response);
             })
         }
     }
