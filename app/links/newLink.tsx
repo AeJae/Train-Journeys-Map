@@ -66,7 +66,7 @@ export default function NewLink({addLink}: {addLink: Function}) {
                 "bg-slate-300 w-full mb-2 rounded-md hover:outline hover:outline-1 hover:outline-slate-400"}>
                 <p className={"font-bold"}>Create a new link</p>
                 <div className={"flex justify-center items-center h-16 sm:h-fit"}>
-                    <p className={"py-1 px-2 w-20 bg-green-500 rounded-md"}>Create</p>
+                    <p className={"py-1 px-2 w-20 bg-green-700 rounded-md text-white"}>Create</p>
                 </div>
             </button>
         }
@@ -82,7 +82,7 @@ export default function NewLink({addLink}: {addLink: Function}) {
                     </div>
                     <div className={"flex flex-col ml-1 sm:flex-row justify-center items-center h-16 sm:h-fit"}>
                         <button className={"p-1 w-20 bg-red-600 rounded-md text-white"} onClick={handleSubmit}>Confirm</button>
-                        <button className={"p-1 w-20 bg-green-500 rounded-md m-0 sm:ml-1"} onClick={handleCancel}>Cancel</button>
+                        <button className={"p-1 w-20 bg-green-700 rounded-md m-0 sm:ml-1 text-white"} onClick={handleCancel}>Cancel</button>
                     </div>
                 </form>
             </div>

@@ -47,7 +47,9 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
             <button onClick={() => {setShowCreate(!showCreate)}} className={"flex items-center justify-between w-full rounded-md"}>
                 <p className={"font-bold"}>Create a new {station?"station":"waypoint"}</p>
                 <div className={"flex justify-center items-center 1"}>
-                    <p className={"py-1 px-2 w-20 bg-green-500 rounded-md"}>{!showCreate?"Create":"Cancel"}</p>
+                    <p className={"py-1 px-2 w-20 rounded-md " + (showCreate?"bg-slate-400":"bg-green-700 text-white")}>
+                        {!showCreate?"Create":"Cancel"}
+                    </p>
                 </div>
             </button>
             {showCreate && <div className={"w-full"}>
@@ -86,8 +88,8 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
                 {/* Submit */}
                 <p className={"mt-5 text-center font-bold -mb-1"}>Actions</p>
                 <div className={"flex mt-2 justify-center items-center w-full"}>
-                    <button onClick={createStation} className={"w-36 bg-red-600 rounded-md py-1 px-2 text-white"}>
-                        Create
+                    <button onClick={createStation} className={"w-36 bg-green-700 rounded-md py-1 px-2 text-white"}>
+                        Create {station?"Station":"Waypoint"}
                     </button>
                 </div>
             </div>}

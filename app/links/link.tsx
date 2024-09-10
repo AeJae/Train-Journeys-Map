@@ -34,7 +34,7 @@ export default function Link({link, removeLink}: {link: Link, removeLink: Functi
             {/* Contains the delete/confirm and cancel buttons for each link. */}
             <div className={"flex flex-col ml-1 sm:flex-row justify-center items-center h-16 sm:h-fit"}>
                 <button className={"p-1 w-20 rounded-md text-white bg-red-600 text-center"} onClick={removeThis}>{(showConfirm?"Confirm":"Delete")}</button>
-                {showConfirm && <button className={"p-1 w-20 m-0 sm:ml-1 rounded-md bg-green-500"} onClick={() => {setShowConfirm(false)}}>Cancel</button>}
+                {showConfirm && <button className={"p-1 w-20 m-0 sm:ml-1 rounded-md bg-green-700 text-white"} onClick={() => {setShowConfirm(false)}}>Cancel</button>}
             </div>
         </div>
         }</>
