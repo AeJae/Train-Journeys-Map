@@ -5,9 +5,11 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 
 export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, deleteFunc}: LocationElemParams) {
-    const [showEditArea, setShowEditArea] = useState(false); // Whether the edit area should be shown.
+    const [errorMsg, setErrorMsg] = useState("Unknown error."); // Last received error message.
     const [confirmDelete, setConfirmDelete] = useState(false); // Whether the delete button should say "Confirm Delete".
+    const [showEditArea, setShowEditArea] = useState(false); // Whether the edit area should be shown.
     const [inputLock, setInputLock] = useState(false); // Whether text inputs should be locked.
+    const [showError, setShowError] = useState(false); // Whether the error area should be shown.
     const [name, setName] = useState(loc.name); // User-entered name.
     const [long, setLong] = useState(loc.long); // User-entered longitude.
     const [lat, setLat] = useState(loc.lat); // User-entered latitude.
@@ -73,7 +75,10 @@ export default function LocationElem({loc, nameFunc, latLongFunc, swapFunc, dele
         } else {
             deleteFunc(loc.name).then((response: any) => {
                 if (response && response.msg) console.log(response.msg);
-                setConfirmDelete(false);
+                if (response && response.success) {
+                    setConfirmDelete(false);
+                    router.refresh();
+                }
                 setInputLock(false);
             })
         }

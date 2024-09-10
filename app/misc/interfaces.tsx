@@ -24,6 +24,12 @@ export interface LocationCreateOverAPI extends BaseItem{
     long: number
 }
 
+// Information related to a location deletion being POSTed to an API endpoint.
+export interface LocationDeleteOverAPI extends BaseItem {
+    // The name of the location to be deleted.
+    name: string
+}
+
 // Information related to a location edit being POSTed to an API endpoint.
 export interface LocationEditOverAPI {
     // Possible values: "name", "latLong", "isStation".
