@@ -6,7 +6,9 @@ import {useRouter} from "next/navigation";
 export default function NewLocation({station, createFunc}: {station: boolean, createFunc: Function}) {
     const router = useRouter();
 
+    const [errorMsg, setErrorMsg] = useState("An unknown error occurred.");
     const [showCreate, setShowCreate] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [name, setName] = useState("");
     const [lat, setLat] = useState("");
     const [long, setLong] = useState("");
@@ -28,23 +30,29 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
         const longFloat = parseFloat(long);
         if (name && !Number.isNaN(latFloat) && !Number.isNaN(longFloat)) {
             createFunc((station?"stn":"wpt"), name, latFloat, longFloat).then((response: any) => {
-                if (response && response.msg) console.log(response.msg);
+                if (response && response.msg && !response.success) {
+                    setErrorMsg(response.msg);
+                    setShowError(true);
+                }
                 if (response && response.success) {
                     setName("");
                     setLat("");
                     setLong("");
                     setShowCreate(false);
+                    setShowError(false);
                     router.refresh();
                 }
             })
         } else {
-            console.log("You have entered an invalid value.");
+            setErrorMsg("You have entered an invalid value.");
+            setShowError(true);
         }
     }
 
     return (
         <div className={"flex flex-col items-center justify-between w-full p-2 mb-2 bg-slate-300 rounded-md select-none"}>
-            <button onClick={() => {setShowCreate(!showCreate)}} className={"flex items-center justify-between w-full rounded-md"}>
+            {/* Initial pane, edit area dropdown toggle button */}
+            <button onClick={() => {setShowCreate(!showCreate);setShowError(false)}} className={"flex items-center justify-between w-full rounded-md"}>
                 <p className={"font-bold"}>Create a new {station?"station":"waypoint"}</p>
                 <div className={"flex justify-center items-center 1"}>
                     <p className={"py-1 px-2 w-20 rounded-md " + (showCreate?"bg-slate-400":"bg-green-700 text-white")}>
@@ -52,6 +60,8 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
                     </p>
                 </div>
             </button>
+
+            {/* Actual detail editing area */}
             {showCreate && <div className={"w-full"}>
                 <hr className={"mt-2 border-slate-200"}/>
                 {/* Set Name */}
@@ -92,6 +102,11 @@ export default function NewLocation({station, createFunc}: {station: boolean, cr
                         Create {station?"Station":"Waypoint"}
                     </button>
                 </div>
+
+                {/* Error messages */}
+                {showError && <div className={"bg-red-600 text-white mt-2 p-1 rounded-md w-full text-center"}>
+                    <p>{errorMsg}</p>
+                </div>}
             </div>}
         </div>
     )
