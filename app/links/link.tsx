@@ -15,20 +15,22 @@ export default function Link({link, removeLink}: {link: Link, removeLink: Functi
     const [errorMsg, setErrorMsg] = useState("An unknown error occurred.");
 
     function removeThis() {
-        setShowConfirm(!showConfirm);
         if (showConfirm) {
             removeLink(link).then((result: any) => {
                 if (result.success) {
                     router.refresh();
                 } else {
+                    // Display the error message to the user
                     setErrorMsg(result.msg);
                     setShowError(true);
+                    // Hide the message after 2.5 seconds
                     setTimeout(() => {
                         setShowError(false);
                     }, 2500)
                 }
             })
         }
+        setShowConfirm(!showConfirm);
     }
 
     return (
@@ -44,6 +46,7 @@ export default function Link({link, removeLink}: {link: Link, removeLink: Functi
             </div>
         </div>
         }
+        {/* Shows the user error messages as required. */}
         {showError && <p className={"mb-2 text-red-600"}>{errorMsg}</p>}
         </>
     )
